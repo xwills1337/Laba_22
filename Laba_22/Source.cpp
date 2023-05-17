@@ -16,6 +16,36 @@ size_t lcg()
 	return x;
 }
 
+bool test_int(char* b)
+{
+	if (*b == '-') b++;
+	if (*b == 0) return false;
+	if (*b == '0' && *(b + 1) != 0) return false;
+	while (*b)
+	{
+		if (*b < '0' || *b>'9') return false;
+		b++;
+	}
+	return true;
+}
+
+int scan()
+{
+	while (true)
+	{
+		char* str = new char[256];
+		std::cin.getline(str, 256);
+		if (test_int(str))
+		{
+			int x = atoi(str);
+			delete[] str;
+			return x;
+		}
+		else puts("Wrong data");
+		delete[]str;
+	}
+}
+
 void print(std::vector<int> mas)
 {
 	for (int i = 0; i < mas.size(); i++)
@@ -25,8 +55,35 @@ void print(std::vector<int> mas)
 	std::cout << std::endl;
 }
 
-std::vector<int> random_fill(int n)
+std::vector<int> fill()
 {
+	int n = 0;
+	std::cout << "Enter the size of the array: ";
+	while (true)
+	{
+		n = scan();
+		if (n > 0) break;
+		else puts("Wrong data");
+	}
+	std::vector<int> mas;
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << "mas[" << i + 1 << "]: ";
+		mas.push_back(scan());
+	}
+	return mas;
+}
+
+std::vector<int> random_fill()
+{
+	int n = 0;
+	std::cout << "Enter the size of the array: ";
+	while (true)
+	{
+		n = scan();
+		if (n > 0) break;
+		else puts("Wrong data");
+	}
 	std::vector<int> mas;
 	for (int i = 0; i < n; i++)
 	{
@@ -67,7 +124,7 @@ void test_sort_bubble(std::vector<int>& mas)
 int main()
 {
 	std::vector<int> mas;
-	mas = random_fill(100);
+	mas = fill();
 	print(mas);
 	test_sort_bubble(mas);
 	print(mas);
