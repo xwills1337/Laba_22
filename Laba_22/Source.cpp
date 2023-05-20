@@ -3,7 +3,8 @@
 #include <conio.h>
 #include <vector>
 
-struct stats {
+struct stats 
+{
 	size_t comparison_count = 0;
 	size_t copy_count = 0;
 };
@@ -92,7 +93,7 @@ std::vector<int> random_fill()
 	return mas;
 }
 
-stats sort_bubble(std::vector<int>& mas)
+stats sort_bubble(std::vector<int>& mas, bool f)
 {
 	stats obj;
 	obj.comparison_count = 0;
@@ -101,7 +102,7 @@ stats sort_bubble(std::vector<int>& mas)
 	{
 		for (int j = 0; j < mas.size() - 1 - i; j++)
 		{
-			if (mas[j] > mas[j + 1])
+			if ((mas[j] > mas[j + 1] && f == true) || (mas[j] < mas[j + 1] && f == false))
 			{
 				int k = mas[j];
 				mas[j] = mas[j + 1];
@@ -114,9 +115,46 @@ stats sort_bubble(std::vector<int>& mas)
 	return obj;
 }
 
-void test_sort_bubble(std::vector<int>& mas)
+stats sort_shell(std::vector<int>& mas, bool f)
 {
-	stats obj = sort_bubble(mas);
+	stats obj;
+	obj.comparison_count = 0;
+	obj.copy_count = 0;
+	for (int d = mas.size() / 2; d > 0; d=d/2)
+	{
+		for (int i = d; i < mas.size(); ++i)
+		{
+			for (int j = i - d; j >= 0; j -= d) 
+			{
+				if ((mas[j] > mas[j + d] && f == true) || (mas[j] < mas[j + d] && f == false))
+				{
+					int k = mas[j];
+					mas[j] = mas[j + d];
+					mas[j+ d] = k;
+					obj.copy_count++;
+					obj.comparison_count++;
+				}
+				else
+				{
+					obj.comparison_count++;
+					break;
+				}
+			}
+		}
+	}
+	return obj;
+}
+
+void test_sort_bubble(std::vector<int>& mas, bool f)
+{
+	stats obj = sort_bubble(mas, f);
+
+	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
+}
+
+void test_sort_shell(std::vector<int>& mas, bool f)
+{
+	stats obj = sort_shell(mas, f);
 
 	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
 }
@@ -124,8 +162,8 @@ void test_sort_bubble(std::vector<int>& mas)
 int main()
 {
 	std::vector<int> mas;
-	mas = fill();
+	mas = random_fill();
 	print(mas);
-	test_sort_bubble(mas);
+	test_sort_shell(mas, true);
 	print(mas);
 }
