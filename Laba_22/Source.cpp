@@ -145,6 +145,67 @@ stats sort_shell(std::vector<int>& mas, bool f)
 	return obj;
 }
 
+stats heapify(std::vector<int>& mas, int n, int i, bool f)
+{
+	stats obj;
+	obj.comparison_count = 0;
+	obj.copy_count = 0;
+	int largest = i;
+	int l = 2 * i + 1; 
+	int r = 2 * i + 2; 
+
+	if ((l < n && mas[l] > mas[largest] && f == true) || (l < n && mas[l] < mas[largest] && f == false))
+	{
+		largest = l;
+		obj.comparison_count++;
+	}
+
+	if ((r < n && mas[r] > mas[largest] && f == true) || (r < n && mas[r] < mas[largest] && f == false))
+	{
+		largest = r;
+		obj.comparison_count++;
+	}
+
+	if (largest != i)
+	{
+		int k = mas[i];
+		mas[i] = mas[largest];
+		mas[largest] = k;
+		obj.copy_count++;
+		stats temp = heapify(mas, n, largest, f);
+		obj.comparison_count += temp.comparison_count;
+		obj.copy_count += temp.copy_count;
+	}
+	return obj;
+}
+
+stats sort_pyramid(std::vector<int>& mas, bool f)
+{
+	stats obj;
+	obj.comparison_count = 0;
+	obj.copy_count = 0;
+
+	for (int i = mas.size() / 2 - 1; i >= 0; i--)
+	{
+		stats temp = heapify(mas, mas.size(), i, f);
+		obj.comparison_count += temp.comparison_count;
+		obj.copy_count += temp.copy_count;
+	}
+
+	for (int i = mas.size() - 1; i >= 0; i--)
+	{
+		int k = mas[0];
+		mas[0] = mas[i];
+		mas[i] = k;
+		obj.copy_count++;
+		stats temp = heapify(mas, i, 0, f);
+		obj.comparison_count += temp.comparison_count;
+		obj.copy_count += temp.copy_count;
+	}
+
+	return obj;
+}
+
 void test_sort_bubble(std::vector<int>& mas, bool f)
 {
 	stats obj = sort_bubble(mas, f);
@@ -159,10 +220,17 @@ void test_sort_shell(std::vector<int>& mas, bool f)
 	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
 }
 
+void test_sort_pyramid(std::vector<int>& mas, bool f)
+{
+	stats obj = sort_pyramid(mas, f);
+
+	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
+}
+
 int main()
 {
 	std::vector<int> mas;
-	mas = random_fill();
+	mas = fill();
 	print(mas);
 	test_sort_shell(mas, true);
 	print(mas);
