@@ -209,7 +209,6 @@ stats sort_pyramid(std::vector<int>& mas, bool f)
 void test_sort_bubble(std::vector<int>& mas, bool f)
 {
 	stats obj = sort_bubble(mas, f);
-
 	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
 }
 
@@ -227,11 +226,68 @@ void test_sort_pyramid(std::vector<int>& mas, bool f)
 	std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
 }
 
+void test_of_sorts()
+{
+	int arr[13] = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 25000, 50000, 100000 };
+	for (int i = 0; i < 13; i++)
+	{
+		std::cout << "Sorting an array with " << arr[i] << " elements\n";
+		stats obj;	
+		std::vector<int> mas;
+		for (int j = 0; j < arr[i]; j++)
+		{
+			mas.push_back(lcg());
+		}
+		sort_bubble(mas, false);
+		obj = sort_bubble(mas, true);
+		std::cout << "comparison_count: " << obj.comparison_count << "\ncopy_count: " << obj.copy_count << std::endl;
+	}
+}
+
 int main()
 {
 	std::vector<int> mas;
-	mas = fill();
-	print(mas);
-	test_sort_shell(mas, true);
-	print(mas);
+	while (true)
+	{
+		system("cls");
+		std::cout << "1 - Sort bubble" << std::endl;
+		std::cout << "2 - Sort shell" << std::endl;
+		std::cout << "3 - Sort pyramid" << std::endl;
+		std::cout << "4 - Create massive" << std::endl;
+		std::cout << "5 - Create random massive" << std::endl;
+		std::cout << "6 - Print massive" << std::endl;
+		std::cout << "7 - Exit" << std::endl;
+		int z = getch();
+		system("cls");
+
+		if (z == '1')
+		{
+			test_sort_bubble(mas, true);
+			if (getch()) z = '0';
+		}
+
+		if (z == '2')
+		{
+			test_sort_shell(mas, true);
+			if (getch()) z = '0';
+		}
+
+		if (z == '3')
+		{
+			test_sort_pyramid(mas, true);
+			if (getch()) z = '0';
+		}
+
+		if (z == '4') mas = fill();
+
+		if (z == '5') mas = random_fill();
+
+		if (z == '6')
+		{
+			print(mas);
+			if (getch()) z = '0';
+		}
+
+		if (z == '7') return 0;
+	}
 }
